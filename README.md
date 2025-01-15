@@ -1,4 +1,4 @@
-# 🕹️ Pong Multiplayer 🎓💻
+# 🕹️🏓Pong Multiplayer 🎓💻
 
 Reviva o clássico Pong, agora em uma versão multiplayer moderna e interativa! Este projeto foi desenvolvido como um desafio para **aprimorar habilidades e estudar tecnologias** como ReactJS, Node.js e WebSocket. 🚀
 
