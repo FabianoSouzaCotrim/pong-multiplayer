@@ -35,10 +35,16 @@ io.on('connection', (socket) => {
     delete game.players[socket.id];
     playerRefresh();
   });
+
+  socket.on('SendMessage', (message) => {
+    console.log(message)
+    const player = game.players[socket.id]
+    io.emit('ReceiveMessage', `${player.name}: ${message}`)
+  })
 });
 
 const playerRefresh = () => {
-  io.emit('playerRefresh', game.players);
+  io.emit('PlayerRefresh', game.players);
 };
 
 app.get('/', (req, res) => {
