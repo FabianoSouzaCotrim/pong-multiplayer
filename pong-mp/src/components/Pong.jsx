@@ -1,33 +1,53 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import PlayerList from "./PlayerList";
+import Chat from "./Chat";
+
+let socket;
 
 const Pong = () => {
   const [players, setPlayers] = useState({});
+  const [messages, setMessages] = useState('')
 
   useEffect(() => {
-    const socket = io("http://localhost:4000");
+    socket = io("http://localhost:4000");
 
-    socket.on("connect", () => {
+    socket.on('connect', () => {
       console.log("Conectado!");
     });
 
-    socket.on("playerRefresh", (players) => {
-      setPlayers(players);
-    });
-
-    
     return () => {
       socket.disconnect();
       console.log("Socket desconectado.");
     };
   }, []);
 
+  useEffect(() => {
+    socket.on('PlayerRefresh', (players) => {
+      setPlayers(players);
+    });
+  
+    return () => {
+      socket.off('PlayerRefresh');
+    };
+  }, []);
+  
+
+  useEffect(() => {
+    socket.on('ReceiveMessage', (receivedMessage) => {
+        setMessages(messages + receivedMessage + `\n\n`)
+    })
+  }, [messages])
+
+  const sendMessage = (message) =>{
+    socket.emit('SendMessage', message)
+  }
+
   return (
     <>
-      {Object.keys(players).map((key) => (
-        <div key={key}>{players[key].name}</div>
-      ))}
+        <PlayerList players={players}/>
+        <Chat sendMessage={sendMessage} messages={messages}/>
     </>
   );
 };
